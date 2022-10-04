@@ -1,70 +1,83 @@
 import React, { useState, useEffect } from "react";
 import useFetch from "./useFetch";
 import SingleUser from "./SingleUser";
-// import SingleFollower from "./SingleFollower";
 
 function App() {
   // useFetch imports
   const { data, isLoading, error } = useFetch();
-  console.log(data);
 
   // state for the current page and displayed users
   const [currentPage, setCurrentPage] = useState(0);
   const [displayedUsers, setDisplayedUsers] = useState([]);
-  console.log(displayedUsers);
 
+  // previous, next, page number button functions
+  const previousPage = () => {
+    setCurrentPage((prev) => {
+      if (prev === 0) {
+        setCurrentPage(data.length - 1);
+      } else {
+        setCurrentPage(currentPage - 1);
+      }
+    });
+  };
+
+  const nextPage = () => {
+    setCurrentPage((prev) => {
+      if (prev === data.length - 1) {
+        setCurrentPage(0);
+      } else {
+        setCurrentPage(currentPage + 1);
+      }
+    });
+  };
+
+  const pageNumber = (index) => {
+    setCurrentPage(index);
+  };
+
+  // useEffect to set the displayedUsers state
   useEffect(() => {
-    if (!data) return;
+    if (isLoading) return;
     setDisplayedUsers(data[currentPage]);
   }, [isLoading, data, currentPage]);
 
   return (
-    <div className="App">
-      {displayedUsers.map((user) => {
-        const { id } = user;
-        return <SingleUser key={id} {...user} />;
-      })}
-      <button
-        onClick={() => {
-          setCurrentPage((prev) => {
-            if (prev === 0) {
-              setCurrentPage(data.length - 1);
-            } else {
-              setCurrentPage(currentPage - 1);
-            }
-          });
-        }}
-      >
-        prev
-      </button>
-      <br />
-      {data?.map((item, index) => {
-        return (
-          <button
-            key={index}
-            onClick={() => {
-              setCurrentPage(index);
-            }}
-          >
-            {index + 1}
-          </button>
-        );
-      })}
-      <br />
-      <button
-        onClick={() => {
-          setCurrentPage((prev) => {
-            if (prev === data.length - 1) {
-              setCurrentPage(0);
-            } else {
-              setCurrentPage(currentPage + 1);
-            }
-          });
-        }}
-      >
-        next
-      </button>
-    </div>
+    <main className="App">
+      <h2>Random Users</h2>
+
+      {isLoading ? (
+        <h2>Loading...</h2>
+      ) : error ? (
+        <h2>{error}</h2>
+      ) : (
+        <>
+          {/* users section */}
+          <section>
+            {displayedUsers.map((user) => {
+              const { id } = user;
+              return <SingleUser key={id} {...user} />;
+            })}
+          </section>
+          {/* end of users section */}
+
+          {/* buttons section */}
+          <section>
+            <button onClick={previousPage}>prev</button>
+
+            {data?.map((item, index) => {
+              return (
+                <button key={index} onClick={() => pageNumber(index)}>
+                  {index + 1}
+                </button>
+              );
+            })}
+
+            <button onClick={nextPage}>next</button>
+          </section>
+          {/* end of buttons section */}
+        </>
+      )}
+    </main>
   );
 }
 

@@ -6,12 +6,10 @@ export default function useFetch() {
   // states
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   //   fetch function
   const fetchUsers = useCallback(async () => {
-    setIsLoading(true);
-
     try {
       const response = await fetch(url);
 

@@ -42,17 +42,23 @@ function App() {
   }, [isLoading, data, currentPage]);
 
   return (
-    <main className="App">
-      <h2>Random Users</h2>
+    <main className="bg-slate-200 min-h-screen w-screen">
+      <h2 className="pt-8 w-max mx-auto text-4xl font-bold text-red-800">
+        random users
+      </h2>
 
       {isLoading ? (
-        <h2>Loading...</h2>
+        <h2 className="pt-8 w-max mx-auto text-4xl font-bold text-red-800">
+          loading...
+        </h2>
       ) : error ? (
-        <h2>{error}</h2>
+        <h2 className="pt-8 w-max mx-auto text-4xl font-bold text-red-800">
+          {error}
+        </h2>
       ) : (
         <>
           {/* users section */}
-          <section>
+          <section className="w-screen flex flex-wrap jusitfy-evenly lg:max-w-[1300px] lg:mx-auto">
             {displayedUsers.map((user) => {
               const { id } = user;
               return <SingleUser key={id} {...user} />;
@@ -61,20 +67,42 @@ function App() {
           {/* end of users section */}
 
           {/* buttons section */}
-          <section>
-            <button onClick={previousPage}>prev</button>
+          <section className="w-screen text-center py-4">
+            <button
+              onClick={previousPage}
+              className="text-xl font-bold text-red-800 m-1 md:m-2"
+            >
+              prev
+            </button>
 
             {data?.map((item, index) => {
               return (
-                <button key={index} onClick={() => pageNumber(index)}>
+                <button
+                  key={index}
+                  onClick={() => pageNumber(index)}
+                  className="border border-solid border-red-800 px-2 rounded-xl text-md text-red-800 font-bold m-1 hover:bg-red-800 hover:text-cyan-200 md:m-2"
+                >
                   {index + 1}
                 </button>
               );
             })}
 
-            <button onClick={nextPage}>next</button>
+            <button
+              onClick={nextPage}
+              className="text-xl font-bold text-red-800 m-1 md:m-2"
+            >
+              next
+            </button>
           </section>
           {/* end of buttons section */}
+
+          {/* page section */}
+          <section className="text-center pb-4">
+            <p className="text-xl text-red-800 font-bold">
+              page {currentPage + 1}
+            </p>
+          </section>
+          {/* end of page section */}
         </>
       )}
     </main>
